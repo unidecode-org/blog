@@ -3,7 +3,7 @@ title: Unidecode | Experimentando y compartiendo usando azucar sintáctico
 # email: youremail@xyz.com
 description: Some text about your blog.
 baseurl: "/blog" # the subpath of your site, e.g. /blog
-url: "https://unidecode.github.io" # the base hostname & protocol for your site
+url: "https://unidecode-org.github.io" # the base hostname & protocol for your site
 google_analytics: "UA-126220967-1"
 
 # User Settings
