@@ -2,7 +2,7 @@
 layout: post
 title: "Visualizando datos con Python: crímenes en Philadelphia"
 date: 2018-09-23 19:13:52
-image: '/assets/img/philadelphia-crime-data/portada.jpg'
+image: '/blog/assets/img/philadelphia-crime-data/portada.jpg'
 show_image_inside: false
 description: Vamos a practicar ciencia de datos visualizando y entendiendo el registro
 no_markdown_description: false
@@ -259,7 +259,7 @@ g.set_xticklabels(rotation=90, labels=crimesCountedByType.index.tolist(), fontsi
 ```
 
 
-![png](/assets/img/philadelphia-crime-data/output_12_0.png)
+![png](/blog/assets/img/philadelphia-crime-data/output_12_0.png)
 
 
 
@@ -357,7 +357,7 @@ g.set_xticklabels(rotation=90, labels=meanCrimesInCategory.index.tolist(), fonts
 ```
 
 
-![png](/assets/img/philadelphia-crime-data/output_20_0.png)
+![png](/blog/assets/img/philadelphia-crime-data/output_20_0.png)
 
 
 ### Densidad de crímenes por categoría
@@ -375,7 +375,7 @@ sns.heatmap(crimesGroupByType)
 
 
 
-![png](/assets/img/philadelphia-crime-data/output_22_1.png)
+![png](/blog/assets/img/philadelphia-crime-data/output_22_1.png)
 
 
 ### Conclusiones
@@ -425,7 +425,7 @@ g.set_xticklabels(rotation=90, labels=crimesByYears.index.tolist(), fontsize=12)
 ```
 
 
-![png](/assets/img/philadelphia-crime-data/output_28_0.png)
+![png](/blog/assets/img/philadelphia-crime-data/output_28_0.png)
 
 
 
@@ -471,7 +471,7 @@ sns.scatterplot(y=lats, x=longs, alpha=0.1, s = 2, legend = False)
 
 
 
-![png](/assets/img/philadelphia-crime-data/output_34_1.png)
+![png](/blog/assets/img/philadelphia-crime-data/output_34_1.png)
 
 
 ### ¿Donde se han registrado delitos en el 2016?
@@ -501,7 +501,7 @@ sns.scatterplot(y=crimeMap.y, x=crimeMap.x, alpha=0.1, s = 2, legend = False)
 
 
 
-![png](/assets/img/philadelphia-crime-data/output_37_1.png)
+![png](/blog/assets/img/philadelphia-crime-data/output_37_1.png)
 
 
 ### Conclusión
@@ -526,7 +526,7 @@ sns.scatterplot(y=crimeMap.y, x=crimeMap.x, hue = recentCrimesTypes, alpha=.5, s
 
 
 
-![png](/assets/img/philadelphia-crime-data/output_40_1.png)
+![png](/blog/assets/img/philadelphia-crime-data/output_40_1.png)
 
 
 ## Zonas en Filadelfia con mayor criminalidad
@@ -542,7 +542,7 @@ sns.kdeplot(lats, longs, cmap="Reds", shade=True, cut=0)
 ```
 
 
-![png](/assets/img/philadelphia-crime-data/output_42_0.png)
+![png](/blog/assets/img/philadelphia-crime-data/output_42_0.png)
 
 
 
@@ -553,7 +553,7 @@ sns.kdeplot(lats, longs, cmap="Reds", shade=True, cut=0)
 
 
 
-![png](/assets/img/philadelphia-crime-data/output_42_2.png)
+![png](/blog/assets/img/philadelphia-crime-data/output_42_2.png)
 
 
 
@@ -649,7 +649,7 @@ sns.scatterplot(\
 
 
 
-![png](/assets/img/philadelphia-crime-data/output_47_1.png)
+![png](/blog/assets/img/philadelphia-crime-data/output_47_1.png)
 
 
 
@@ -716,7 +716,7 @@ sns.distplot(crimeData.sample(totalCrimes // 2).Hour);
 ```
 
 
-![png](/assets/img/philadelphia-crime-data/output_54_0.png)
+![png](/blog/assets/img/philadelphia-crime-data/output_54_0.png)
 
 
 ### Conclusion
