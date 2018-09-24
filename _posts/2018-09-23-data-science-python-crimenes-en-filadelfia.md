@@ -378,7 +378,7 @@ sns.heatmap(crimesGroupByType)
 
 ### Conclusiones
 
-La mayoría de los crímenes en la ciudad de Filadelfia (69%) no están identificados bajo una categoría propia, esto puede significar que acumulan varias categorías menores, o bien, como en las categorías específicas de crímenes están los tipos más graves, es posible que "Otros" contengan los de menor gravedad. No obstante, entre los crímenes identificados más comunes están los Robos, el vandalismo y el uso, tenencia o distribución de narcóticos y entre los menos comunes están los homicidios.
+La mayoría de los crímenes en la ciudad de Filadelfia (69%) no están identificados bajo una categoría propia, esto puede significar que acumulan varias categorías menores, o bien, como en las categorías específicas de crímenes están los tipos más graves, es posible que "Otros" contenga los de menor gravedad. No obstante, entre los crímenes identificados más comunes están los Robos, el vandalismo y el uso, tenencia o distribución de narcóticos y entre los menos comunes están los homicidios.
 
 ## Incidencia de crímenes por año
 
