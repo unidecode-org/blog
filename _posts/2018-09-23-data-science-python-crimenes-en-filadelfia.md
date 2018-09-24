@@ -4,14 +4,14 @@ title: "Visualizando datos con Python: crímenes en Philadelphia"
 date: 2018-09-23 19:13:52
 image: '/blog/assets/img/philadelphia-crime-data/portada.jpg'
 show_image_inside: false
-description: Vamos a practicar ciencia de datos visualizando y entendiendo el registro
+description: Vamos a practicar ciencia de datos visualizando y entendiendo el registro de crímenes de Filadelfia
 no_markdown_description: false
 category: 'data science'
 tags:
     - 'data science'
     - 'python'
-twitter_text: Vamos a practicar ciencia de datos visualizando y entendiendo el registro
-introduction: Vamos a practicar ciencia de datos visualizando y entendiendo el registro
+twitter_text: Vamos a practicar ciencia de datos visualizando y entendiendo el registro de crímenes de Filadelfia
+introduction: Vamos a practicar ciencia de datos visualizando y entendiendo el registro de crímenes de Filadelfia
 ---
 
 En esta oportunidad se practica visualización y estudio de datos usamos el registro de crímenes en Philadelphia, el cual se puede descargar desde el sitio web de [Kaggle](https://www.kaggle.com/mchirico/philadelphiacrimedata). Pesa poco más de 70 MB. Para este ejercicio vamos a descubrir qué nos dice la data y hacer inferencias.
