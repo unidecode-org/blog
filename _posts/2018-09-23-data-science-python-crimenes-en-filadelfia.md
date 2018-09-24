@@ -8,7 +8,7 @@ description: Vamos a practicar ciencia de datos visualizando y entendiendo el re
 no_markdown_description: false
 category: 'data science'
 tags:
-    - 'data science'
+    - 'data-science'
     - 'python'
 twitter_text: Vamos a practicar ciencia de datos visualizando y entendiendo el registro de crímenes de Filadelfia
 introduction: Vamos a practicar ciencia de datos visualizando y entendiendo el registro de crímenes de Filadelfia
