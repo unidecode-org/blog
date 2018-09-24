@@ -14,9 +14,7 @@ twitter_text: Vamos a practicar ciencia de datos visualizando y entendiendo el r
 introduction: Vamos a practicar ciencia de datos visualizando y entendiendo el registro de crímenes de Filadelfia
 ---
 
-En esta oportunidad se practica visualización y estudio de datos usamos el registro de crímenes en Philadelphia, el cual se puede descargar desde el sitio web de [Kaggle](https://www.kaggle.com/mchirico/philadelphiacrimedata). Pesa poco más de 70 MB. Para este ejercicio vamos a descubrir qué nos dice la data y hacer inferencias.
-
-Para este ejemplo en concreto, se usa:
+En esta oportunidad se practica visualización y estudio de datos con el registro de crímenes en Philadelphia, que se puede descargar desde el sitio web de [Kaggle](https://www.kaggle.com/mchirico/philadelphiacrimedata). Para este ejercicio vamos a descubrir qué nos dice la data y hacer inferencias usando:
 
 * Python
 * Pandas
@@ -24,7 +22,7 @@ Para este ejemplo en concreto, se usa:
 * Matplotlib
 * Leaflet
 
-Primero, importamos las librerías que vamos a usar.
+Primero, importamos las librerías:
 
 
 ```python
