@@ -6,8 +6,7 @@
         {% include svg-icons.html %}
         {% include header.html %}
         <section class="post">
-
-            <article role="article" id="post" class="post-content" itemprop="articleBody">
+            <article role="article" id="post" class="post-content non-full-width-code" itemprop="articleBody">
                 <p itemprop="post-info" class="post-info">
                     {% if page.date %}
                         <svg id="date" class="icon-calendar"><use xlink:href="#icon-calendar"></use></svg>
@@ -19,16 +18,19 @@
                     <span>{{ minutesText }}</span>
                 </p>
                 <h1 class="post-title" itemprop="name">{{ page.title }}</h1>
-                <p itemprop="description" class="subtitle">{{ page.description }}</p>
 
-                {% if page.image %}
-                    <img src="{{ page.image }}" alt="Imagem de capa" class="post-cover">
+                {% if page.no_markdown_description %}
+                    <p itemprop="description" class="subtitle">{{ page.description }}</p>
+                {% endif %}
+
+                {% if page.image and show_image_inside %}
+                    <img src="{{ page.image }}" alt="Imagen de portada" class="post-cover">
                 {% endif %}
 
                 {{ content }}
             </article>
 
-            <div class="progress-bar" data-minutes="{{ totalMinutes }}">
+            <div class="progress-bar reading-time" data-minutes="{{ totalMinutes }}">
                 <span class="time-completed"></span>
                 <span class="time-remaining"></span>
                 <div class="bar">

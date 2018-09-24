@@ -7,6 +7,15 @@
 
 .post-content
     padding rem(40px) 0
+    .widget-subarea
+        max-height: none;
+        height: 400px;
+        max-width 50rem
+        margin 0 auto
+        .leaflet-pane
+            z-index 1
+        .leaflet-top, .leaflet-bottom
+            z-index 1
     img
         max-width 100%
         margin rem(0px) auto
@@ -145,7 +154,7 @@
 
 /* Progress bar */
 
-.progress-bar
+.progress-bar.reading-time
     position fixed
     left 0
     right 0

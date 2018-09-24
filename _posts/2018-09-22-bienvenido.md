@@ -1,6 +1,6 @@
 ---
 layout: redirect-about
-title: "Bienvenido a Unidecopde"
+title: "Bienvenido a Unidecode"
 description: Una nueva generación de hackers está por comenzar
 image: 'assets/img/light-small.jpg'
 category: 'blog'

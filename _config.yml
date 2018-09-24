@@ -4,6 +4,11 @@ title: Unidecode | Experimentando y compartiendo usando azucar sintáctico
 description: Some text about your blog.
 baseurl: "/blog" # the subpath of your site, e.g. /blog
 url: "https://unidecode-org.github.io" # the base hostname & protocol for your site
+
+# Uncomment for local development
+# baseurl: "" # the subpath of your site, e.g. /blog
+# url: "" # the base hostname & protocol for your site
+
 google_analytics: "UA-126220967-1"
 
 # User Settings
