@@ -2,7 +2,7 @@
 title: Unidecode | Experimentando y compartiendo usando azucar sintáctico
 # email: youremail@xyz.com
 description: Some text about your blog.
-baseurl: "/blog" # the subpath of your site, e.g. /blog
+baseurl: "/" # the subpath of your site, e.g. /blog
 url: "https://unidecode-org.github.io" # the base hostname & protocol for your site
 
 # Uncomment for local development
@@ -31,10 +31,8 @@ highlighter: rouge
 permalink: /:title/
 
 # Plugins
-gems:
-  - jemoji
-
 plugins:
+  - jemoji
   - jekyll-redirect-from
 
 # Links to include in menu navigation

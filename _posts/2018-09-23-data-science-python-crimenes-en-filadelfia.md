@@ -2,7 +2,7 @@
 layout: post
 title: "Visualizando datos con Python: crímenes en Philadelphia"
 date: 2018-09-23 19:13:52
-image: '/blog/assets/img/philadelphia-crime-data/portada.jpg'
+image: '/assets/img/philadelphia-crime-data/portada.jpg'
 show_image_inside: false
 description: Vamos a practicar ciencia de datos visualizando y entendiendo el registro de crímenes de Filadelfia
 no_markdown_description: false
@@ -44,7 +44,7 @@ from matplotlib.pyplot import imread
 from ipyleaflet import *
 ```
 
-Por otro lado, necesitaremos interpretar fechas, así que definimos un lambda para hacerlo de manera funcional y leemos el registro usando pandas.
+Por otro lado, necesitaremos interpretar fechas, así que definimos un lambda para hacerlo de manera funcional mas adelante.
 
 
 ```python
@@ -54,6 +54,7 @@ def parseDatetime(x):
 parsedate = lambda x: parseDatetime(x)
 ```
 
+Leemos el registro de crímenes con pandas y echamos un primer vistazo a la tabla con el método [DataFrame.head](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.head.html).
 
 ```python
 crimeData = pd.read_csv(\
@@ -223,14 +224,13 @@ crimeData.head()
 
 ## Tipos de crímenes
 
+Accedemos a la columna de categorías de crímenes y con el método [Series.value_counts](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.value_counts.html) obtenemos el número de registros por cada tipo de crimen.
 
 ```python
+# Cantidad de crímenes en cada categoría
 crimesCountedByType = crimeData.Text_General_Code\
     .value_counts()
-```
 
-
-```python
 crimesCountedByType.head()
 ```
 
@@ -245,6 +245,7 @@ crimesCountedByType.head()
 
 ### Cantidad de crímenes por categoría
 
+Utilizando la serie anterior, hacemos un gráfico de barras con el método [seaborn.barplot](https://seaborn.pydata.org/generated/seaborn.barplot.html), para poner en cotexto estos datos de forma visual.
 
 ```python
 # Seteamos el tamaño del gráfico
@@ -257,11 +258,16 @@ g.set_xticklabels(rotation=90, labels=crimesCountedByType.index.tolist(), fontsi
 ```
 
 
-![png](/blog/assets/img/philadelphia-crime-data/output_12_0.png)
+![png](/assets/img/philadelphia-crime-data/output_12_0.png)
 
+
+En el gráfico se puede apreciar con mucha facilidad que la mayoría de los crímenes están registrados bajo *All other offenses* y *Other assaults* es decir, que no describen específicamente de qué crímenes se trata. **¿Cuantos crímenes estan bajo éste código de clasificación?**.
+
+La clase [Series](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html) de pandas nos ofrece el método [Series.drop](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.drop.html#pandas.Series.drop) que remueve registros y [Series.sum](http://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.sum.html#pandas.Series.sum) el cual devuelve la cantidad de registros.
 
 
 ```python
+# Cantidad de crímenes bajo categorías bien definidas
 unidentifiedCrimes = crimesCountedByType\
     .drop("All Other Offenses")\
     .drop("Other Assaults")\
@@ -270,6 +276,7 @@ unidentifiedCrimes = crimesCountedByType\
 
 
 ```python
+# Cantidad de crímenes bajo las categorías de "Otros"
 identifiedCrimes = crimesCountedByType\
     .drop("Thefts")\
     .drop("Vandalism/Criminal Mischief")\
@@ -305,45 +312,46 @@ identifiedCrimes = crimesCountedByType\
     .sum()
 ```
 
+De ésta manera, podemos ver el porcentaje de crímenes que no están bien identificados.
+
 
 ```python
-# Porcentaje de crímenes no identificados
+# Calculo de la relación porcentual
 100.0 * identifiedCrimes / (identifiedCrimes + unidentifiedCrimes)
+>> 31.95938920186576
 ```
 
-
-
-
-    31.95938920186576
-
-
+Ahora bien, en el gráfico anterior no se pueden advertir, con exactitud, las relaciones de la cantidad de crímenes en cada categoría con respecto al total. **¿Cuáles son estas relaciones y cómo podemos visualizarlas?**.
 
 
 ```python
+# Serie de datos con el conteo de crímenes
 crimesGroupByType = pd.Series(crimeData\
     .Text_General_Code\
     .value_counts()\
 ).reset_index()
 
-crimesGroupByType.rename(columns = {'Text_General_Code': 'Total', 'index': 'Category'}, inplace=True)
+# Renombramos las columnas
+crimesGroupByType.rename(columns = {\
+    'Text_General_Code': 'Total',\
+    'index': 'Category'
+    },\
+    inplace=True\
+)
 
+# Seteamos el índice en la columna de categorías
 crimesGroupByType.set_index("Category", inplace=True)
-```
 
-
-```python
+# Sumamos la cantidades para obtener el total entre todos las categorías
 totalCrimes = crimesGroupByType.Total.sum()
-```
 
-
-```python
-# Porcentaje de crímenes por categoría
+# Calculamos el porcentaje de crímenes por categoría
 meanCrimesInCategory = crimesGroupByType\
     .Total\
     .apply(lambda totalInCategory: (100.0 * totalInCategory / totalCrimes))
 ```
 
-### Porcentaje de crímenes registrados por categoría
+### Porcentaje por categoría usando gráfico de barras
 
 
 ```python
@@ -355,10 +363,10 @@ g.set_xticklabels(rotation=90, labels=meanCrimesInCategory.index.tolist(), fonts
 ```
 
 
-![png](/blog/assets/img/philadelphia-crime-data/output_20_0.png)
+![png](/assets/img/philadelphia-crime-data/output_20_0.png)
 
 
-### Densidad de crímenes por categoría
+### Porcentaje por categoría usando mapa de calor
 
 
 ```python
@@ -366,39 +374,36 @@ sns.heatmap(crimesGroupByType)
 ```
 
 
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x12aae1350>
-
-
-
-
-![png](/blog/assets/img/philadelphia-crime-data/output_22_1.png)
+![png](/assets/img/philadelphia-crime-data/output_22_1.png)
 
 
 ### Conclusiones
 
-La mayoría de los crímenes en la ciudad de Filadelfia (69%) no están identificados bajo una categoría propia, esto puede significar que acumulan varias categorías menores, o bien, como en las categorías específicas de crímenes están los tipos más graves, es posible que "Otros" contenga los de menor gravedad. No obstante, entre los crímenes identificados más comunes están los Robos, el vandalismo y el uso, tenencia o distribución de narcóticos y entre los menos comunes están los homicidios.
+La mayoría de los crímenes en la ciudad de Filadelfia (69%) no están identificados bajo una categoría propia, esto puede significar que acumulan varias categorías menores, o bien, como en las categorías específicas de crímenes están los tipos más graves, es posible que "Otros" contenga los de menor gravedad.
+
+No obstante, entre los crímenes identificados más comunes están los Robos, el vandalismo y el uso, tenencia o distribución de narcóticos y entre los menos comunes están los homicidios.
 
 ## Incidencia de crímenes por año
 
+Estudiemos como se comportan los crímenes a través de los años usando métodos en la sección anterior. Recordemos que la columna que indica el mes del crimen, incluye también el año.
 
 ```python
-crimeData.Month = crimeData.Month.apply(lambda givenMonth: datetime.strptime(givenMonth, "%Y-%m"));
-```
+# Interpretamos la columna de mes usando datetime
+crimeData.Month = crimeData\
+    .Month\
+    .apply(lambda givenMonth: datetime.strptime(givenMonth, "%Y-%m"));
 
+# Mapeamos la columna al año que indica
+crimesByYears = crimeData\
+    .Month\
+    .map(lambda x: x.year)\
+    .value_counts()
 
-```python
-crimesByYears = crimeData.Month.map(lambda x: x.year).value_counts()
-```
-
-
-```python
+# Echamos un vistazo al resultado
 crimesByYears
 ```
 
-
-
+Como resultado, tenemos una *Serie* en la que cada año se relaciona con los crímenes registrados en esas fechas y, en primera instancia, se puede ver que los crímenes van decreciendo poco a poco en el tiempo. **¿Cómo podemos graficar y evidenciar éste resultado?**
 
     2006    234755
     2007    223902
@@ -415,26 +420,33 @@ crimesByYears
     Name: Month, dtype: int64
 
 
-
+### Crímenes por año utilizando gráfico de barras
 
 ```python
-g = sns.barplot(y=crimesByYears.index.tolist(), x=crimesByYears.values, log=True);
-g.set_xticklabels(rotation=90, labels=crimesByYears.index.tolist(), fontsize=12);
+# Con el parámetro log, indicamos a seaborn que use una
+g = sns.barplot(\
+    y=crimesByYears.index.tolist(),\
+    x=crimesByYears.values,\
+    log=True\
+);
+
+# Rotamos las etiquetas para hacer mas facil la lectura
+g.set_xticklabels(\
+    rotation=90,\
+    labels=crimesByYears.index.tolist(),\
+    fontsize=12\
+);
 ```
 
 
-![png](/blog/assets/img/philadelphia-crime-data/output_28_0.png)
+![png](/assets/img/philadelphia-crime-data/output_28_0.png)
 
-
+**¿Cómo cambió la criminalidad entre el 2006 y el 2016?**
 
 ```python
 100.0 * crimesByYears[2016] / crimesByYears[2006]
+>> 72.03297054375838
 ```
-
-
-
-
-    72.03297054375838
 
 
 
@@ -444,156 +456,121 @@ La incidencia de crímenes tiene una tendencia bajista de hecho, en 10 años se 
 
 ## Crímenes por ubicación
 
-Veamos primeramente en un mapa los registros que tenemos, haciendo una ventana aleatorea de la mitad de los datos. 
+Otra perspectiva que nos conscierne estudiar es **¿Cuales son las zonas en las que hay más crímen?**. Veamos primeramente en un gráfico de puntos las latitudes y longitudes, haciendo una ventana aleatorea de la mitad de los datos. Para ello, utilizamos el método [seaborn.scatterplot](https://seaborn.pydata.org/generated/seaborn.scatterplot.html).
 
 
 ```python
+# Sacamos los registros sin latitud y longitud
 totalCrimes = crimeData.dropna().shape[0]
 
+# Hacemos una ventana de los datos
 crimeDataSample = crimeData.sample(totalCrimes // 2)
 
+# Tomamos la ubicación geográfica
 lats = (crimeDataSample.Lat * 10e4)
 longs = (crimeDataSample.Lon * 10e4)
-```
 
-
-```python
 sns.scatterplot(y=lats, x=longs, alpha=0.1, s = 2, legend = False)
 ```
 
+Como resultado, se pueden contemplar que los puntos que rellenan todo el mapa de Filadelfia, con algunos sitios mas poblados que otros.
+
+![png](/assets/img/philadelphia-crime-data/output_34_1.png)
 
 
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x12a99f390>
-
-
-
-
-![png](/blog/assets/img/philadelphia-crime-data/output_34_1.png)
-
-
-### ¿Donde se han registrado delitos en el 2016?
+### Mapa de crímenes en el 2016 usando gráfico de puntos
 
 
 ```python
+# Generamos una mascara de los crímenes en el año 2016
 recentCrimesMask = crimeData.Month.map(lambda x: x.year) == 2016
+
+# Aplicamos la mascara a la data
 recentCrimes = crimeData[recentCrimesMask]
 
+# Obtenemos la ubicación correspondiente para cada caso
 lats = (recentCrimes.Lat.dropna() * 10e4)
 longs = (recentCrimes.Lon.dropna() * 10e4)
 
+# Generamos un DataFrame con estos datos
 crimeMap = pd.DataFrame({ 'x': longs, 'y': lats })
+
+# Creamos un gráfico de puntos con scatterplot
+sns.scatterplot(y=crimeMap.y, x=crimeMap.x, alpha=0.1, s = 2, legend = False)
 ```
+
+![png](/assets/img/philadelphia-crime-data/output_37_1.png)
+
+### Mapa de crímenes usando puntos coloreados por categoría
 
 
 ```python
-sns.scatterplot(y=crimeMap.y, x=crimeMap.x, alpha=0.1, s = 2, legend = False)
+# Obtenemos la columna de categorías desde el DataFrame
+recentCrimesTypes = recentCrimes.Text_General_Code
 
+# Utilizamos el parámetro hue en scatterplot, para diferenciar los tipos de puntos
+sns.scatterplot(\
+    y=crimeMap.y,\
+    x=crimeMap.x,\
+    hue = recentCrimesTypes,\
+    alpha=.5,\
+    s = 5,\
+    legend = False\
+)
 ```
 
-
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x127a2e310>
-
-
-
-
-![png](/blog/assets/img/philadelphia-crime-data/output_37_1.png)
-
+![png](/assets/img/philadelphia-crime-data/output_40_1.png)
 
 ### Conclusión
 
 En la zona del aeropuerto de Filadelfia y en la zona limítrofe con Pensilvania, los crímenes son menores que en el resto de las zonas.
 
 
-```python
-recentCrimesTypes = recentCrimes.Text_General_Code
-```
-
-
-```python
-sns.scatterplot(y=crimeMap.y, x=crimeMap.x, hue = recentCrimesTypes, alpha=.5, s = 5, legend = False)
-```
-
-
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x12f13a890>
-
-
-
-
-![png](/blog/assets/img/philadelphia-crime-data/output_40_1.png)
-
-
 ## Zonas en Filadelfia con mayor criminalidad
 
+Otro enfoque posible para la pregunta anterior es utilizar gráficos de densidad. Veamos dos cosas: un mapa de Filadelfia real y un gráfico de estimación de densidad por kernel.
 
 ```python
-philadelphiaMap = cbook.get_sample_data('/Users/cnexans/personal/jupyter-guide/data_science_course/resources/map.jpeg')
+# Leemos la data que corresponde a la imagen
+philadelphiaMap = cbook.get_sample_data(\
+    'resources/map.jpeg'\
+)
+
 philadelphiaImage = imread(philadelphiaMap)
-plt.imshow(philadelphiaImage, zorder=0, extent=[0.5, 8.0, 1.0, 7.0])
+
+# Mostramos la imagen
+plt.imshow(\
+    philadelphiaImage,\
+    zorder=0,\
+    extent=[0.5, 8.0, 1.0, 7.0]\
+)
+
 plt.show()
 
-sns.kdeplot(lats, longs, cmap="Reds", shade=True, cut=0)
+# Creamos un gráfico de densidad por kernel
+sns.kdeplot(\
+    lats,\
+    longs,\
+    cmap="Reds",\
+    shade=True,\
+    cut=0\
+)
 ```
 
 
-![png](/blog/assets/img/philadelphia-crime-data/output_42_0.png)
+![png](/assets/img/philadelphia-crime-data/output_42_0.png)
 
 
-
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x12d76bcd0>
-
-
-
-
-![png](/blog/assets/img/philadelphia-crime-data/output_42_2.png)
-
-
-
-```python
-crimesByPoliceDistricts = crimeData["Police_Districts"].value_counts().sort_values()
-crimesByPoliceDistricts
-```
-
-
-
-
-    22      2818
-    4      31113
-    6      44444
-    1      48008
-    12     72198
-    7      73207
-    13     74514
-    8      83426
-    19     87183
-    5      96025
-    21     96956
-    14    109907
-    3     114689
-    2     116180
-    10    120481
-    20    130293
-    9     132875
-    15    135628
-    18    150186
-    16    153103
-    17    161245
-    11    183196
-    Name: Police_Districts, dtype: int64
-
+![png](/assets/img/philadelphia-crime-data/output_42_2.png)
 
 
 ## Estudiando por bloques específicos
 
-Se puede apreciar en las gráficas anteriores que, existen dos zonas con mayor densidad de crímenes que en las demás (al centro al noreste) y también existe una zona densidad moderada-alta respecto a las demás. Veamos como podemos visualizar las zonas, utilizando el mapa de Filadelfia y para ello, tomaremos como ejemplo, la zona del centro.
+Se puede apreciar en las gráficas anteriores que existen dos zonas con mayor densidad de crímenes que en las demás (al centro al noreste) y también existe una zona con densidad moderada-alta respecto a las demás. Veamos cómo podemos visualizar estas zonas, utilizando el mapa de Filadelfia y para ello, tomaremos como ejemplo, la zona del centro.
 
 ### Crímenes en el centro de Filadelfia
+
+Comencemos con un gráfico de puntos como los que hicimos anteriormente. Notaremos que en esta zona, hay una curva en la que no aparecen crímenes, esto es porque ahí pasa el Río Schuylkill.
 
 
 ```python
@@ -608,24 +585,6 @@ crimesInCenterBlockMask = (longitudeMask) & (latitudeMask)
 # Aplicamos la máscara a la data
 crimesInCenterBlock = crimeData[crimesInCenterBlockMask]
 
-# Mostramos los bloques que hemos tomado
-crimesInCenterBlock["Location_Block"].value_counts().head()
-```
-
-
-
-
-    1000 BLOCK MARKET ST              3970
-    1300 BLOCK MARKET ST              2735
-    1500 BLOCK MARKET ST              2331
-    200 BLOCK S 13TH ST               1702
-    1500 BLOCK JOHN F KENNEDY BLVD    1608
-    Name: Location_Block, dtype: int64
-
-
-
-
-```python
 # Visualizamos el registro con puntos
 sns.scatterplot(\
     y = crimesInCenterBlock.Lat, \
@@ -640,29 +599,36 @@ sns.scatterplot(\
 ```
 
 
+![png](/assets/img/philadelphia-crime-data/output_47_1.png)
 
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x12cb27f90>
-
-
-
-
-![png](/blog/assets/img/philadelphia-crime-data/output_47_1.png)
-
-
+Para poner en contexto, utilizamos Leaflet para dibujar un cuadro con la zona que hemos estudiado. En una notebook de Jupyter, está la libreria *ipyleaflet*, que permite la exportación de widgets de mapas.
 
 ```python
-# Para poner en contexto, utilizamos leaflet para dibujar un cuadro con la zona que estudiamos
-m = Map(center=(39.925, -75.2), zoom=10, basemap=basemaps.OpenStreetMap.Mapnik);
+# from ipyleaflet import *
 
-polygon = Polygon(
-    locations = [(39.925, -75.2), (39.975, -75.2), (39.975, -75.15), (39.925, -75.15)],
-    color = "green",
-    fill_color = "green"
+# Creamos un mapa
+m = Map(\
+    center=(39.925, -75.2),\
+    zoom=10,\
+    basemap=basemaps.OpenStreetMap.Mapnik\
 );
 
+# Creamos un polígono con el cuadro
+polygon = Polygon(\
+    locations = [\
+        (39.925, -75.2),\
+        (39.975, -75.2),\
+        (39.975, -75.15),\
+        (39.925, -75.15)\
+    ],\
+    color = "green",\
+    fill_color = "green"\
+);
+
+# Agregamos el polìgono al mapa
 m.add_layer(polygon);
 
+# Y lo mostramos
 m
 
 ```
@@ -672,12 +638,13 @@ m
 
 #### Tipos de crímenes en la zona del centro
 
+Contando por categoría y viendo los primeros resultados, hacemos otro hallazgo.
 
 ```python
-crimesInCenterBlock["Text_General_Code"].value_counts().head()
+crimesInCenterBlock.Text_General_Code\
+    .value_counts()\
+    .head()
 ```
-
-
 
 
     All Other Offenses             67236
@@ -688,24 +655,21 @@ crimesInCenterBlock["Text_General_Code"].value_counts().head()
     Name: Text_General_Code, dtype: int64
 
 
+Es claro que los robos *Thefts* representan una parte importante de los crímenes en esta zona. No obstante, volvamos a la pregunta **¿Qué porcentaje de crímenes representan los del centro de Filadelfia?**
 
 
 ```python
 100.0 * (crimesInCenterBlock.count() / crimeData.count())[0]
+>> 15.315705855144227
 ```
-
-
-
-
-    15.315705855144227
-
-
 
 ### Conclusion
 
 Los crímenes en la zona central de hecho, representan un 15% del total.
 
-## Horas con mayor número de crímenes registrados
+## Crímenes por hora
+
+Otra pregunta interesante que nos podemos hacer es **¿Cual es la distribución de ocurrencia de crímenes respecto las horas?**. Podemos conjeturar momentos mas seguros o inseguros en el día. Veamos una gráfica de distribución que nos explique los hechos con el método [seaborn.distplot](https://seaborn.pydata.org/generated/seaborn.distplot.html)
 
 
 ```python
@@ -713,8 +677,7 @@ totalCrimes = crimeData.dropna().shape[0]
 sns.distplot(crimeData.sample(totalCrimes // 2).Hour);
 ```
 
-
-![png](/blog/assets/img/philadelphia-crime-data/output_54_0.png)
+![png](/assets/img/philadelphia-crime-data/output_54_0.png)
 
 
 ### Conclusion
